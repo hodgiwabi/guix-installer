@@ -37,12 +37,15 @@
   (operating-system
     (inherit installation-os)
     (kernel linux)
-    (firmware (list linux-firmware))
+    (firmware (cons* broadcom-bt-firmware
+                     (list linux-firmware)
+                     %base-firmware))
 
     ;; Add the 'net.ifnames' argument to prevent network interfaces
     ;; from having really long names.  This can cause an issue with
     ;; wpa_supplicant when you try to connect to a wifi network.
-    (kernel-arguments '("quiet" "modprobe.blacklist=radeon" "net.ifnames=0"))
+    (kernel-arguments '("modprobe.blacklist=b43,b43legacy,ssb,bcm43xx,brcm80211,brcmfmac,brcmsmac,bcma,radeon" "quiet" "net.ifnames=0"))
+    (kernel-loadable-modules (list broadcom-sta))
 
     (services
      (cons*
